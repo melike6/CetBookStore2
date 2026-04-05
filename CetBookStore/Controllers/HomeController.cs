@@ -4,7 +4,6 @@ using CetBookStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace CetBookStore.Controllers
 {
@@ -17,28 +16,24 @@ namespace CetBookStore.Controllers
             this.context = context;
         }
 
-
         public async Task<IActionResult> Index()
         {
-
-
             HomePageViewModel homePageViewModel = new HomePageViewModel();
 
-
-           homePageViewModel.MostCommenteds =await context.Books.
-                OrderByDescending(b => b.Comments.Count)
+            homePageViewModel.MostCommenteds = await context.Books
+                .OrderByDescending(b => b.Comments!.Count)
                 .ThenByDescending(b => b.Title)
                 .Take(3)
                 .Select(b => new BookViewModel
-            {
-                Id = b.Id,
-                Title = b.Title,
-                Author = b.Author,
-                Price = b.Price,
-                OldPrice = b.PreviousPrice,
-                IsInSale = b.IsInSale
-
-                }).ToListAsync();
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    Author = b.Author,
+                    Price = b.Price,
+                    OldPrice = b.PreviousPrice,
+                    IsInSale = b.IsInSale
+                })
+                .ToListAsync();
 
             homePageViewModel.NewArrivals = await context.Books
                 .OrderByDescending(b => b.CreatedDate)
@@ -52,8 +47,8 @@ namespace CetBookStore.Controllers
                     Price = b.Price,
                     OldPrice = b.PreviousPrice,
                     IsInSale = b.IsInSale
-                }).ToListAsync();
-
+                })
+                .ToListAsync();
 
             homePageViewModel.RandomBoooks = await context.Books
                 .OrderBy(b => Guid.NewGuid())
@@ -66,7 +61,8 @@ namespace CetBookStore.Controllers
                     Price = b.Price,
                     OldPrice = b.PreviousPrice,
                     IsInSale = b.IsInSale
-                }).ToListAsync();
+                })
+                .ToListAsync();
 
             return View(homePageViewModel);
         }
@@ -79,7 +75,10 @@ namespace CetBookStore.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
     }
 }

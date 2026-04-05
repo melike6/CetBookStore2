@@ -4,10 +4,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CetBookStore.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+    public class ApplicationDbContext : IdentityDbContext
     {
-            public DbSet<Book> Books { get; set; }
-            public DbSet<Category> Categories { get; set; }
-           public DbSet<Comment> Comments { get; set; }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Book> Books { get; set; } = default!;
+        public DbSet<Category> Categories { get; set; } = default!;
+        public DbSet<Comment> Comments { get; set; } = default!;
+
+        public DbSet<CartItem> CartItems { get; set; } = default!;
+        public DbSet<Order> Orders { get; set; } = default!;
+        public DbSet<OrderItem> OrderItems { get; set; } = default!;
     }
 }

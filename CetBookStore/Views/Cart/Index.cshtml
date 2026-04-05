@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CetBookStore.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<h2>Shopping Cart</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Message"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Book.Title</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price.ToString("0.00")</td>
+                    <td>@((item.Price * item.Quantity).ToString("0.00"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form asp-controller="Cart" asp-action="Buy" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success">Buy</button>
+    </form>
+}
